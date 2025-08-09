@@ -1,6 +1,7 @@
 {#def
     name: str,
-    lattes_id: str
+    lattes: dict,
+    orcid: dict | None
 #}
 
 {#
@@ -29,12 +30,30 @@
 {% set name = name | string %}
 {% set initials = name | words | map(attribute=0) | join('') %}
 
-<div class="flex items-center mb-4">
-    <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white flex items-center justify-center font-bold text-xl mr-4">
-        {{ initials[0] ~ initials[-1] }}
+<div class="flex items-start justify-between mb-4">
+
+    <div class="flex items-center">
+        <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 
+            text-white flex items-center justify-center font-bold text-xl mr-4">
+            {{ initials[0] ~ initials[-1] }}
+        </div>
+        <div>
+            <h2 class="text-xl font-semibold">{{name}}</h2>
+            <p class="text-sm text-gray-600 font-mono">ID: {{lattes.id}}</p>
+        </div>
     </div>
-    <div>
-        <h2 class="text-xl font-semibold">{{name}}</h2>
-        <p class="text-sm text-gray-600 font-mono">ID: {{lattes_id}}</p>
+
+    <div class="flex space-x-2 self-start">
+        {% if orcid %}
+            <a href="{{orcid.url}}" title="Abrir perfil Orcid"
+                target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+                <i class="ai ai-orcid-square ai-2x text-gray-300 cursor-pointer hover:text-teal-500 transition-colors"></i>
+            </a>
+        {% endif %}
+        <a href="{{lattes.url}}" title="Abrir perfil Lattes" 
+            target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">
+            <i class="ai ai-lattes-square ai-2x text-gray-300 cursor-pointer hover:text-teal-500 transition-colors"></i>
+        </a>
     </div>
+
 </div>
