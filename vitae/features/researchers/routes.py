@@ -31,7 +31,14 @@ database = Database(vitae.postgres.engine)
 router = APIRouter()
 templates = load_templates(vitae)
 
-all_filters = LoadFilters(FiltersInDatabase(database)).all
+
+def get_all_filters() -> dict[str, list[str]]:
+    """Load available filters from the database on demand.
+
+    This prevents executing database queries at module import time which
+    can cause failures during CLI startup or other import-time operations.
+    """
+    return LoadFilters(FiltersInDatabase(database)).all
 
 
 # =~=~=~=~=~=~= EndPoints =~=~=~=~=~=~=
@@ -46,7 +53,7 @@ def home(
         "SearchPage.jinja",
         {
             "request": request,
-            "filters": all_filters,
+            "filters": get_all_filters(),
             "page": 0,
         },
     )
@@ -87,7 +94,7 @@ def show_search(
         {
             "request": request,
             "results": results,
-            "filters": all_filters,
+            "filters": get_all_filters(),
             "page": page,
         },
     )

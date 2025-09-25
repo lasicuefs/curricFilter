@@ -92,5 +92,8 @@ class Bootstrap:
 
     def _reset_logs(self) -> None:
         """Reset the logs' directory."""
-        shutil.rmtree(self.logs)
+        try:
+            shutil.rmtree(self.logs)
+        except FileNotFoundError:
+            pass
         self.logs.mkdir(parents=True, exist_ok=True)
